@@ -1,0 +1,110 @@
+node_modules/
+venv/
+__pycache__/
+*.log
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Python generated files and environments
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+backend/venv/
+
+# Frontend generated files and dependencies
+frontend/node_modules/
+frontend/dist/
+frontend/node_modules/.tmp/
+frontend/node_modules/.vite/
+
+# Local logs
+*.log
+
+# Local project archives (may contain environment files)
+ResQDrive_AI_source.zip
+ResQDrive_corrected_frontend_files.zip
+
+# Local database files and dumps (keep source migrations)
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.mdb
+*.accdb
+*.ibd
+*.frm
+ibdata*
+ib_logfile*
+*.dump
+*.sql.gz
+
+# Logs and temporary files
+logs/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.old
+
+# Local archives
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# Private keys, certificates, and service credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.p7b
+*.p7c
+*.der
+*.crt
+*.cer
+*.jks
+*.keystore
+*.ppk
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+credentials.json
+*credentials*.json
+secrets.json
+*service-account*.json
+firebase-adminsdk*.json
+
+# Additional local runtime and operating-system artifacts
+*.sqlite3-*
+*.pyd
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+desktop.ini
+.npm-cache/
+# Local data and generated project snapshots
+/database/sql/database1.sql
+/ResQDrive-AI.pdf
+/clean_structure.txt
+/structure.txt
+# Per-user editor preference
+/.vscode/settings.json
+# Root build output and tool caches
+/dist/
+/build/
+**/.cache/
+**/.vite/

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>
+        ResQDrive Live Tracking
+    </title>
+
+
+    <style>
+
+        body {
+            font-family: Arial;
+            margin: 30px;
+        }
+
+
+        h2 {
+            color: #333;
+        }
+
+
+        #status {
+
+            font-size: 18px;
+            font-weight: bold;
+
+        }
+
+
+        #output {
+
+            background: #111;
+            color: #00ff00;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            border-radius: 10px;
+
+        }
+
+
+        button {
+
+            padding: 10px 20px;
+            margin-top: 15px;
+            cursor: pointer;
+
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+<h2>
+🚗 ResQDrive Provider Live Tracking
+</h2>
+
+
+<p id="status">
+Connecting...
+</p>
+
+
+<pre id="output"></pre>
+
+
+
+<button onclick="sendLocation()">
+Send Test Location
+</button>
+
+
+
+<script>
+
+
+const output =
+document.getElementById("output");
+
+
+const status =
+document.getElementById("status");
+
+
+
+const socket =
+new WebSocket(
+"ws://127.0.0.1:8000/ws/tracking"
+);
+
+
+
+
+// When connected
+
+socket.onopen = function(){
+
+
+    status.innerHTML =
+    "🟢 Connected";
+
+
+    output.innerHTML +=
+    "WebSocket Connected\n";
+
+
+};
+
+
+
+
+
+// Receive location updates
+
+socket.onmessage = function(event){
+
+
+    let data =
+    JSON.parse(event.data);
+
+
+
+    output.innerHTML +=
+    "\n-------------------\n";
+
+
+    output.innerHTML +=
+    "Provider ID: "
+    + data.provider_id
+    + "\n";
+
+
+    output.innerHTML +=
+    "Latitude: "
+    + data.latitude
+    + "\n";
+
+
+    output.innerHTML +=
+    "Longitude: "
+    + data.longitude
+    + "\n";
+
+
+
+    output.scrollTop =
+    output.scrollHeight;
+
+
+};
+
+
+
+
+
+
+// Send test location
+
+function sendLocation(){
+
+
+    let location = {
+
+
+        provider_id:1,
+
+        latitude:17.385044,
+
+        longitude:78.486671
+
+
+    };
+
+
+
+    socket.send(
+        JSON.stringify(location)
+    );
+
+
+    output.innerHTML +=
+    "\nSent Location\n";
+
+
+}
+
+
+
+
+
+
+// Connection closed
+
+socket.onclose = function(){
+
+
+    status.innerHTML =
+    "🔴 Disconnected";
+
+
+    output.innerHTML +=
+    "\nWebSocket Closed";
+
+
+
+};
+
+
+
+
+
+
+socket.onerror = function(error){
+
+
+    status.innerHTML =
+    "⚠️ WebSocket Error";
+
+
+    console.log(error);
+
+
+};
+
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+﻿APScheduler==3.11.3
+bcrypt==4.0.1
+email-validator==2.3.0
+fastapi==0.141.1
+firebase-admin==7.5.0
+passlib==1.7.4
+PyMySQL==1.2.0
+python-dotenv==1.2.3
+python-jose==3.5.0
+python-multipart==0.0.32
+pydantic==2.13.4
+redis==8.1.0
+requests==2.34.2
+rq==2.10.0
+SQLAlchemy==2.0.51
+uvicorn==0.52.1
+websockets==17.0.1
