@@ -1,4 +1,5 @@
-# ResQDrive AI
+# ResQDrive_AI
+AI-powered roadside assistance
 
 ResQDrive AI is a vehicle-service and emergency assistance application. Its main components are a FastAPI backend, a React and TypeScript frontend, MySQL persistence, provider assignment and service-request workflows, route and ETA support, notifications, and an optional local Ollama integration.
 
