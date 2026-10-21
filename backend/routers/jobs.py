@@ -2,7 +2,9 @@
 # routers/jobs.py
 # ==========================================
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+
+from auth.admin_oauth2 import get_current_admin
 
 from jobs.request_jobs import (
     cancel_expired_request,
@@ -12,7 +14,8 @@ from jobs.request_jobs import (
 
 router = APIRouter(
     prefix="/jobs",
-    tags=["Jobs"]
+    tags=["Jobs"],
+    dependencies=[Depends(get_current_admin)],
 )
 
 

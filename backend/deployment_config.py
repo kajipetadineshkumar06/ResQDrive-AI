@@ -77,6 +77,15 @@ def auto_create_tables_enabled() -> bool:
     return enabled
 
 
+def scheduler_enabled() -> bool:
+    """Keep background jobs explicit in production and on by default locally."""
+    if is_production() and "SCHEDULER_ENABLED" not in os.environ:
+        raise RuntimeError(
+            "SCHEDULER_ENABLED must be explicitly set to true or false in production."
+        )
+    return _read_bool("SCHEDULER_ENABLED", default=True)
+
+
 def get_ollama_settings() -> dict[str, object]:
     """Return bounded local Ollama settings; AI stays off by default."""
     enabled = _read_bool("OLLAMA_ENABLED", default=False)

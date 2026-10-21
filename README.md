@@ -58,10 +58,28 @@ Both commands require their project dependencies. Keep tests on isolated local f
 
 ## Known limitations
 
-- The deployed MySQL schema has not been verified. The repository currently contains only `database/sql/migrations/001_agent_events.sql`; it does not provide a complete baseline for all SQLAlchemy models. Do not treat automatic table creation as a production migration plan.
+- Migration readiness is unverified. `database/sql/migrations/000_core_schema_baseline.sql` is a proposed baseline for 15 ORM tables, and `001_agent_events.sql` is the existing agent-events migration; neither has been executed or verified on MySQL. The deployed schema and migration history remain unknown. Do not treat automatic table creation as a production migration plan.
 - No payment gateway integration is present in this project snapshot, so payment checkout and settlement are unavailable. Pricing or invoice code alone does not confirm that payment was collected.
 - Firebase notification delivery requires Firebase Admin credentials. No service-account credential is included in this copy, and end-to-end delivery has not been verified.
 - Google Maps routing requires a restricted backend key configured through `GOOGLE_MAPS_API_KEY`. No live API request or key validation was performed during publication preparation.
 - Ollama is optional. If enabled, the configured local service and model must be available.
 - Starting the backend may activate scheduled assignment or notification work. Use only a disposable database and controlled test data until those behaviors are reviewed.
 - This project has not been verified as production-ready.
+
+## Deployment configuration (not yet deployed)
+
+### Vercel frontend
+
+- Create the Vercel project with `frontend/` as its root directory.
+- Use `npm run build` as the build command and `dist` as the output directory.
+- Set the build-time variable `VITE_API_URL` to the backend's public HTTPS base URL. The production build rejects a missing or non-HTTPS value.
+- `frontend/vercel.json` rewrites browser routes to `index.html`, so refreshing a React Router URL returns the SPA entry point.
+
+### Railway backend
+
+- Create the Railway service with `backend/` as its root directory. `backend/railway.toml` supplies the production Uvicorn command and `/health` health-check path; the command binds to `0.0.0.0` and Railway's injected `PORT`, without reload mode.
+- The Railway start command sets `APP_ENV=production`. Configure `CORS_ALLOWED_ORIGINS` (the exact Vercel HTTPS origin), `DATABASE_URL` or all of `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`, `JWT_SECRET_KEY`, and `ADMIN_JWT_SECRET_KEY`. Keep `AUTO_CREATE_TABLES` unset or false; production rejects true. Use distinct, strong signing secrets. `GOOGLE_MAPS_API_KEY` is needed if Google Maps routing is enabled.
+- Production startup requires an explicit `SCHEDULER_ENABLED` choice. For an initial single Railway API replica, set it to true so automatic assignment, timeout recovery, and scheduled notifications continue. Do not scale the API to multiple replicas: the scheduler is process-local, so replicas would duplicate jobs. Setting it false disables those jobs; this project does not yet provide a separate scheduler service or distributed job lock.
+- Set `REDIS_URL` to a deployment Redis URL if the RQ background-job endpoints are used. Without it, the existing local-development fallback remains `localhost:6379`. The RQ worker is a separate process (`python -m workers.worker`) and must also be provisioned if queued jobs are used; no Railway worker service is configured here.
+
+Firebase push delivery is not ready for deployment in this snapshot: messaging calls exist, but no Firebase Admin app/credential initialization was found. Google Maps and Ollama remain separately configured optional integrations. Database schema and migration execution must be verified in disposable staging before deployment; `/health` is liveness-only and does not verify database readiness.

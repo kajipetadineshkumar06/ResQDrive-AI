@@ -6,6 +6,7 @@ from deployment_config import (
     auto_create_tables_enabled,
     get_cors_origins,
     get_ollama_settings,
+    scheduler_enabled,
 )
 
 
@@ -59,6 +60,31 @@ class DeploymentConfigTests(unittest.TestCase):
         with patch.dict(os.environ, env, clear=True):
             with self.assertRaisesRegex(RuntimeError, "production"):
                 auto_create_tables_enabled()
+
+    def test_scheduler_remains_enabled_by_default_in_development(self):
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertTrue(scheduler_enabled())
+
+    def test_production_requires_an_explicit_scheduler_choice(self):
+        with patch.dict(os.environ, {"APP_ENV": "production"}, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "SCHEDULER_ENABLED"):
+                scheduler_enabled()
+
+    def test_production_scheduler_can_be_explicitly_enabled_or_disabled(self):
+        for value, expected in (("true", True), ("false", False)):
+            with self.subTest(value=value):
+                env = {"APP_ENV": "production", "SCHEDULER_ENABLED": value}
+                with patch.dict(os.environ, env, clear=True):
+                    self.assertEqual(scheduler_enabled(), expected)
+
+    def test_invalid_scheduler_value_is_rejected(self):
+        with patch.dict(
+            os.environ,
+            {"APP_ENV": "test", "SCHEDULER_ENABLED": "sometimes"},
+            clear=True,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "SCHEDULER_ENABLED"):
+                scheduler_enabled()
 
 
 if __name__ == "__main__":

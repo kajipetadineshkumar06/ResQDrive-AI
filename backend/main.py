@@ -20,7 +20,11 @@ import models.agent_event
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from database import Base, engine
-from deployment_config import auto_create_tables_enabled, get_cors_origins
+from deployment_config import (
+    auto_create_tables_enabled,
+    get_cors_origins,
+    scheduler_enabled,
+)
 from tasks.scheduler import start_scheduler, stop_scheduler
 from websocket.tracking import manager
 
@@ -108,7 +112,8 @@ def health_check():
 
 @app.on_event("startup")
 def startup_event():
-    start_scheduler()
+    if scheduler_enabled():
+        start_scheduler()
 
 
 @app.on_event("shutdown")

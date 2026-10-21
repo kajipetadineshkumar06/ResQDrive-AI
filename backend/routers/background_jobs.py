@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+
+from auth.admin_oauth2 import get_current_admin
 
 from core.queue import task_queue
 
@@ -10,7 +12,8 @@ from jobs.request_jobs import (
 
 router = APIRouter(
     prefix="/jobs",
-    tags=["Background Jobs"]
+    tags=["Background Jobs"],
+    dependencies=[Depends(get_current_admin)],
 )
 
 
@@ -54,7 +57,7 @@ def test_timeout(
 # TEST PROVIDER RELEASE JOB
 # =====================================================
 
-@router.post("/release-provider/{provider_id}")
+@router.post("/enqueue/release-provider/{provider_id}")
 def test_release(
     provider_id: int
 ):
