@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { API_BASE_URL } from "../api/config";
 
 const AddVehicle = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const AddVehicle = () => {
         vehicle_color: formData.vehicleColor.trim(),
       };
 
-      const response = await fetch("http://localhost:8000/vehicles/", {
+      const response = await fetch(`${API_BASE_URL}/vehicles/`, {
         method: "POST",
 
         headers: {
