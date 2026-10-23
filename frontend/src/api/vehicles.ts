@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config";
+
 export interface Vehicle {
   vehicle_id: number;
   user_id: number;
@@ -18,7 +20,7 @@ export const getVehicles = async (): Promise<Vehicle[]> => {
     throw new Error("You are not logged in.");
   }
 
-  const response = await fetch("http://localhost:8000/vehicles/", {
+  const response = await fetch(`${API_BASE_URL}/vehicles/`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
