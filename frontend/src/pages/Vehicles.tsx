@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/ui/Icon";
+import { API_BASE_URL } from "../api/config";
 
 interface Vehicle {
   vehicle_id: number;
@@ -50,7 +51,7 @@ const Vehicles = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:8000/vehicles/", {
+      const response = await fetch(`${API_BASE_URL}/vehicles/`, {
         method: "GET",
 
         headers: {
